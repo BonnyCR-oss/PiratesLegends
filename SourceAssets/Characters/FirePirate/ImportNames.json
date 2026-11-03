@@ -1,0 +1,11 @@
+{
+  "Iddle.fbx": "Models\\CHR_FirePirate.fbx",
+  "Meshy_AI_Ember_Corsair_biped_texture_0_metallic.png": "Textures\\T_FirePirate_Metallic.png",
+  "Meshy_AI_Ember_Corsair_biped_texture_0_normal.png": "Textures\\T_FirePirate_Normal.png",
+  "Meshy_AI_Ember_Corsair_biped_Animation_Walking_withSkin.fbx": "Animations\\ANIM_FirePirate_Walk.fbx",
+  "Meshy_AI_Ember_Corsair_biped_texture_0_roughness.png": "Textures\\T_FirePirate_Roughness.png",
+  "Meshy_AI_Ember_Corsair_biped_texture_0.png": "Textures\\T_FirePirate_BaseColor.png",
+  "Meshy_AI_Ember_Corsair_biped_Animation_Jump_Over_Obstacle_2_withSkin.fbx": "Animations\\ANIM_FirePirate_Jump.fbx",
+  "Meshy_AI_Ember_Corsair_biped_Animation_RunFast_withSkin.fbx": "Animations\\ANIM_FirePirate_Sprint.fbx",
+  "Meshy_AI_Ember_Corsair_biped_Animation_Running_withSkin.fbx": "Animations\\ANIM_FirePirate_Run.fbx"
+}
