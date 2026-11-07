@@ -1,0 +1,45 @@
+PERSONAJE VERDE — ROPA PARA UNITY
+
+Ya instalado y comprobado en PiratesLegends (Unity 6000.5.6f1).
+
+Prefab:
+Assets/_PirateLegends/Art/Characters/greenCharacter/Models/Verde_Con_Ropa.prefab
+
+Escena de prueba:
+Assets/_PirateLegends/Scenes/Tests/SCN_GreenCharacter_ClothTest.unity
+Abre la escena y pulsa Play para ver la caminata y la tela.
+
+Ropa preparada:
+- Faldones: 1.433 particulas de Cloth, 144 ancladas.
+- Cintas del brazo izquierdo: 388 particulas, 27 ancladas.
+- Cintas del brazo derecho: 458 particulas, 13 ancladas.
+- Ocho capsulas en piernas y brazos para las colisiones de la ropa.
+- Textura original conservada; material de dos caras para las telas finas.
+- Pesos de las telas ajustados a pelvis y antebrazos para evitar los estiramientos
+  producidos por los pesos automaticos de Mixamo en las tiras largas.
+- Los componentes de Cloth funcionan sin scripts personalizados en ejecucion.
+
+Validacion:
+El configurador compila dentro del Editor de Unity. Prefab generado y probado en Play
+con la caminata humanoide del personaje anterior, reutilizada solo en la escena de prueba.
+Muestras tomadas a los 11 y 28 segundos: las tres telas cambian de posicion,
+mantienen valores finitos y no producen errores de la simulacion en consola.
+Tambien se revisaron capturas desde delante y detras.
+Todavia conviene ajustar las colisiones al agregar carreras, saltos y giros bruscos.
+
+El FBX que entregaste contiene una pose de dos fotogramas, no una caminata.
+El prefab usa su controlador Verde_Pose. Para tu juego, asigna tus animaciones
+humanoides de Mixamo al controlador y revisa Apply Root Motion segun tu movimiento.
+
+Para llevarlo a otro proyecto:
+Importa Verde_Listo_Unity.unitypackage. Incluye el prefab configurado, la escena
+de prueba y sus dependencias, incluida la caminata de referencia.
+
+Alternativa para instalar solo los archivos fuente:
+Copia la carpeta Verde dentro de Unity_Import a Assets. Selecciona
+Verde_Unity_Cloth.fbx y ejecuta Tools > Verde > Crear prefab con ropa.
+El configurador crea o actualiza su material, controlador y prefab en esa carpeta.
+
+Blender:
+Verde_Ropa_Trabajo.blend conserva el modelo original oculto y las piezas preparadas.
+La simulacion de Cloth se ejecuta en Unity; no se ha horneado en el FBX.

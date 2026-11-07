@@ -29,6 +29,14 @@ Se validaron poses de los cinco clips en una instancia temporal y se verificó v
 
 ## Animaciones activas actualizadas
 
+CHR_FirePirate_Mixamo@Idle.fbx sustituye el idle del Blend Tree y se configura en bucle. CHR_FirePirate_Mixamo@Dual Weapon Combo.fbx se incorpora al estado DualWeaponCombo, sin bucle, con trigger Attack y retorno a Locomotion al terminar. Ambos usan el Avatar de Models/CHR_FirePirate_Mixamo.fbx.
+
+La tecla 1 (fila superior o teclado numérico) activa la habilidad de fuego en el suelo. FireAbility, en el hijo Visual, genera llamas, brasas y luz naranja en ambas manos durante el combo; el material usa el shader URP PirateLegends/FireAbility. El movimiento manual y el salto se suspenden durante la habilidad. El clic izquierdo solo captura el cursor.
+
+El combo extrae el movimiento horizontal de la animación; FireAbility.OnAnimatorMove lo aplica a la cápsula mediante CharacterController.Move. La gravedad sigue bajo PlayerLocomotion, y las demás animaciones siguen usando movimiento por controles. Esto conserva la nueva posición al volver al idle y elimina el retorno brusco causado por hornear el desplazamiento dentro de la pose. La habilidad tiene animación y efectos; el sistema de daño todavía no está implementado.
+
+Verificado en Unity: tecla 1 mediante Input System, habilidad activa y 87 partículas en una muestra del combo. Desplazamiento final de 2,14 m, retorno a Locomotion, partículas apagadas y posición conservada; paso máximo medido de 3,6 cm por fotograma durante la segunda parte del combo y su salida a 60 Hz. Captura: Captures/FireAbility_Key1.png.
+
 ANIM_FirePirate_Run2.fbx sustituye Run y Sprint en el Blend Tree (incluida la carrera al mantener Shift). ANIM_FirePirate_Jump2.fbx sustituye Jump. Los clips anteriores se conservan como alternativas.
 
 Las nuevas animaciones usan Create From This Model con Avatares Humanoid propios; copiar el Avatar del modelo original produce una incompatibilidad de jerarquía. Unity realiza la adaptación humanoide al personaje. Run2 está configurada en bucle; Jump2 no. Root motion permanece desactivado. Se verificó que los estados reproducen ANIM_FirePirate_Run2 y ANIM_FirePirate_Jump2 con peso 1.

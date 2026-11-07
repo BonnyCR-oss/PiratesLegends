@@ -18,12 +18,15 @@ namespace PirateLegends.Player
         [SerializeField, Min(0f)] private float jumpBuffer = .12f;
         private CharacterController body;
         private PlayerInputReader input;
+        private FireAbility fireAbility;
         private Vector3 horizontalVelocity;
         private float verticalVelocity, lastGrounded = float.NegativeInfinity;
         private readonly RaycastHit[] groundHits = new RaycastHit[12];
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Jump = Animator.StringToHash("Jump");
+        private static readonly int Attack = Animator.StringToHash("Attack");
         public bool Grounded { get; private set; }
+        public bool MovementLocked { get; set; }
         public Vector3 Velocity => body.velocity;
         public Transform CameraTransform { set => cameraTransform = value; }
 
@@ -31,8 +34,9 @@ namespace PirateLegends.Player
         {
             body = GetComponent<CharacterController>(); input = GetComponent<PlayerInputReader>();
             if (!animator) animator = GetComponentInChildren<Animator>();
+            fireAbility = GetComponentInChildren<FireAbility>();
             if (!cameraTransform && Camera.main) cameraTransform = Camera.main.transform;
-            if (animator) animator.applyRootMotion = false;
+            if (animator) animator.applyRootMotion = fireAbility != null;
         }
         private bool ProbeGround()
         {
@@ -54,7 +58,9 @@ namespace PirateLegends.Player
             if (dt <= 0f) return;
             Grounded = verticalVelocity <= 0f && ProbeGround();
             if (Grounded) { lastGrounded = Time.time; verticalVelocity = -2f; }
-            Vector2 move = input.Move;
+            bool usingAbility = MovementLocked || (fireAbility && fireAbility.IsActive);
+            Vector2 move = usingAbility ? Vector2.zero : input.Move;
+            if (usingAbility) horizontalVelocity = Vector3.zero;
             Vector3 forward = cameraTransform ? cameraTransform.forward : Vector3.forward;
             forward.y = 0f; forward.Normalize();
             if (forward.sqrMagnitude < .01f) forward = Vector3.forward;
@@ -65,7 +71,7 @@ namespace PirateLegends.Player
             if (direction.sqrMagnitude > .001f)
                 transform.rotation = Quaternion.RotateTowards(transform.rotation,
                     Quaternion.LookRotation(direction), rotationSpeed * dt);
-            if (Time.time - lastGrounded <= coyoteTime && input.ConsumeJump(jumpBuffer))
+            if (!usingAbility && Time.time - lastGrounded <= coyoteTime && input.ConsumeJump(jumpBuffer))
             {
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 lastGrounded = float.NegativeInfinity; Grounded = false;
@@ -77,11 +83,24 @@ namespace PirateLegends.Player
             if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f) verticalVelocity = 0f;
             if (animator)
             {
+                if (!usingAbility && Grounded && input.AttackPressed && !animator.IsInTransition(0)
+                    && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+                {
+                    horizontalVelocity = Vector3.zero;
+                    animator.SetTrigger(Attack);
+                }
                 var actual = body.velocity; actual.y = 0;
                 float speed = actual.magnitude;
                 float value = speed <= walkSpeed ? speed / walkSpeed : Mathf.Lerp(1f, 3f, Mathf.InverseLerp(walkSpeed, runSpeed, speed));
                 animator.SetFloat(Speed, value, .10f, dt);
             }
+        }
+
+        public void ApplyAbilityMotion(Vector3 delta)
+        {
+            // Keep gravity and ground contact under the locomotion controller.
+            delta.y = 0f;
+            body.Move(delta);
         }
     }
 }

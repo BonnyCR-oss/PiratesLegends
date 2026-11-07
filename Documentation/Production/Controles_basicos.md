@@ -7,6 +7,7 @@ Pulsa Play y haz clic en la vista Game.
 - W/A/S/D: caminar relativo a la orientación horizontal de la cámara.
 - Shift izquierdo o derecho, mantenido: correr.
 - Espacio: saltar cuando hay suelo, con una pequeña tolerancia al borde y pulsación anticipada al aterrizaje.
+- 1 (fila superior o teclado numérico): habilidad de fuego, disponible en el suelo; el combo controla el avance y vuelve a locomoción conservando la posición.
 - Ratón: girar cámara en tercera persona, con límites verticales y detección de paredes.
 - Escape: liberar cursor; clic izquierdo: capturarlo nuevamente.
 
@@ -14,9 +15,10 @@ Pulsa Play y haz clic en la vista Game.
 
 - PlayerInputReader: único lector del Input System; bindings de teclado/ratón y estado de cursor.
 - PlayerLocomotion: CharacterController como único responsable del desplazamiento, gravedad, salto y enlace con Animator.
+- FireAbility: llamas y brasas en las manos, luces y desplazamiento físico del combo.
 - ThirdPersonOrbitCamera: cámara local orbital; referencias al jugador guardadas en la escena.
 
-Velocidades iniciales: caminar 2,5 m/s, correr 5,5 m/s. Altura de salto 1,25 m. Estos parámetros se ajustan en el Inspector. Se reutilizan el Animator y el salto elegido por el usuario. Los controles todavía son locales, sin sincronización de red ni combate.
+Velocidades iniciales: caminar 2,5 m/s, correr 5,5 m/s. Altura de salto 1,25 m. Estos parámetros se ajustan en el Inspector. Se reutilizan el Animator y el salto elegido por el usuario. Los controles todavía son locales, sin sincronización de red ni sistema de daño. La habilidad de fuego reproduce animación y efectos.
 
 ## Verificación
 
