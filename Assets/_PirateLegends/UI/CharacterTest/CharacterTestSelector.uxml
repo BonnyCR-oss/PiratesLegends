@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="CharacterTestSelector.uss" />
+    <ui:VisualElement name="screen" picking-mode="Ignore">
+        <ui:VisualElement name="selector" picking-mode="Ignore">
+            <ui:VisualElement class="panel">
+                <ui:Label text="PIRATE LEGENDS  /  CAMPO DE PRUEBAS" class="eyebrow" />
+                <ui:Label text="Elige tu&#10;personaje." class="title" />
+                <ui:Label text="Cuatro elementos. Un mismo campo de pruebas." class="subtitle" />
+                <ui:VisualElement name="cards" />
+                <ui:VisualElement class="details">
+                    <ui:Label text="PERSONAJE SELECCIONADO" class="eyebrow" />
+                    <ui:Label name="selected-name" text="Fire" class="selected-name" />
+                    <ui:Label name="selected-description" class="description" />
+                    <ui:Label name="controls" class="controls" />
+                </ui:VisualElement>
+                <ui:Button name="play" text="PROBAR PERSONAJE   →" />
+                <ui:Label text="Pulsa Esc durante la prueba para cambiar de personaje." class="footer" />
+            </ui:VisualElement>
+            <ui:Label text="VISTA PREVIA  /  PERSONAJE EN TIEMPO REAL" class="preview-tag" />
+        </ui:VisualElement>
+        <ui:VisualElement name="hud" picking-mode="Ignore">
+            <ui:Label name="hud-name" />
+            <ui:Button name="change" text="Esc  ·  Cambiar personaje" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

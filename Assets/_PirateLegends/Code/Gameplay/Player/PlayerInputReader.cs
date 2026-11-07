@@ -7,11 +7,12 @@ namespace PirateLegends.Player
     public sealed class PlayerInputReader : MonoBehaviour
     {
         private InputActionMap actions;
-        private InputAction move, look, jump, sprint, releaseCursor, captureCursor;
+        private InputAction move, look, jump, sprint, fireAbility, releaseCursor, captureCursor;
         private float jumpPressedAt = float.NegativeInfinity;
         public Vector2 Move { get; private set; }
         public Vector2 Look { get; private set; }
         public bool Sprint { get; private set; }
+        public bool AttackPressed { get; private set; }
 
         private void Awake()
         {
@@ -24,6 +25,8 @@ namespace PirateLegends.Player
             jump = actions.AddAction("Jump", InputActionType.Button, "<Keyboard>/space");
             sprint = actions.AddAction("Sprint", InputActionType.Button, "<Keyboard>/leftShift");
             sprint.AddBinding("<Keyboard>/rightShift");
+            fireAbility = actions.AddAction("FireAbility", InputActionType.Button, "<Keyboard>/1");
+            fireAbility.AddBinding("<Keyboard>/numpad1");
             releaseCursor = actions.AddAction("ReleaseCursor", InputActionType.Button, "<Keyboard>/escape");
             captureCursor = actions.AddAction("CaptureCursor", InputActionType.Button, "<Mouse>/leftButton");
         }
@@ -31,7 +34,7 @@ namespace PirateLegends.Player
         private void OnEnable() { actions.Enable(); SetCursor(true); }
         private void OnDisable()
         {
-            actions.Disable(); Move = Look = Vector2.zero; Sprint = false;
+            actions.Disable(); Move = Look = Vector2.zero; Sprint = false; AttackPressed = false;
             jumpPressedAt = float.NegativeInfinity; SetCursor(false);
         }
         private void OnDestroy() { actions?.Dispose(); }
@@ -52,6 +55,7 @@ namespace PirateLegends.Player
             Move = active ? Vector2.ClampMagnitude(move.ReadValue<Vector2>(), 1f) : Vector2.zero;
             Look = active ? look.ReadValue<Vector2>() : Vector2.zero;
             Sprint = active && sprint.IsPressed();
+            AttackPressed = active && fireAbility.WasPressedThisFrame();
             if (active && jump.WasPressedThisFrame()) jumpPressedAt = Time.time;
         }
         public bool ConsumeJump(float bufferSeconds)
