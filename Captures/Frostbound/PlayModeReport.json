@@ -1,0 +1,70 @@
+{
+    "checks": [
+        {
+            "name": "Humanoid",
+            "pass": true,
+            "evidence": "Avatar=Frostbound_Unity_ClothAvatar; clips=7"
+        },
+        {
+            "name": "Walk input",
+            "pass": true,
+            "evidence": "distance=1,649746 Speed=0,4641638"
+        },
+        {
+            "name": "Run input",
+            "pass": true,
+            "evidence": "distance=3,377409 walk=1,649746"
+        },
+        {
+            "name": "Jump input",
+            "pass": true,
+            "evidence": "height=1,23437 grounded=True"
+        },
+        {
+            "name": "H1 ground and dedup",
+            "pass": true,
+            "evidence": "health=145 hits=1 impact=(-3.00, 0.03, 2.00)"
+        },
+        {
+            "name": "H2 three collisions",
+            "pass": true,
+            "evidence": "health=134 hits=3 total impacts=4"
+        },
+        {
+            "name": "H3 hold pose",
+            "pass": true,
+            "evidence": "aiming=True speed=0"
+        },
+        {
+            "name": "H3 release collision",
+            "pass": true,
+            "evidence": "health=135 hits=1 impact=(2.90, 1.05, 7.38)"
+        },
+        {
+            "name": "Bow cleanup",
+            "pass": true,
+            "evidence": "bow and nocked arrow removed after dissolution"
+        },
+        {
+            "name": "Wall blocks projectile",
+            "pass": true,
+            "evidence": "covered health=200 impact=(4.42, 1.09, 4.69)"
+        },
+        {
+            "name": "Friendly fire disabled",
+            "pass": true,
+            "evidence": "friendly team rejected"
+        },
+        {
+            "name": "Miss has no damage",
+            "pass": true,
+            "evidence": "impacts=6"
+        },
+        {
+            "name": "Reset targets input",
+            "pass": true,
+            "evidence": "R restored all targets"
+        }
+    ],
+    "complete": true
+}
