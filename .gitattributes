@@ -75,3 +75,6 @@
 *.[dD][yY][lL][iI][bB] filter=lfs diff=lfs merge=lfs -text
 *.wlt text eol=lf whitespace=-blank-at-eol
 *.wlt text eol=lf whitespace=-blank-at-eol
+Assets/_PirateLegends/Art/Environment/Archipelago/Terrain/TD_StarterIsland.asset filter=lfs diff=lfs merge=lfs -text
+Assets/_PirateLegends/Art/Environment/Archipelago/Meshes/MSH_PrototypeOcean.asset filter=lfs diff=lfs merge=lfs -text
+Assets/_PirateLegends/Art/Environment/Archipelago/Textures/T_IslandHeight.asset filter=lfs diff=lfs merge=lfs -text
