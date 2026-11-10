@@ -1,5 +1,6 @@
 using UnityEngine;
 using PirateLegends.Player;
+using PirateLegends.Ships;
 
 namespace PirateLegends.CameraSystem
 {
@@ -18,16 +19,28 @@ namespace PirateLegends.CameraSystem
         [SerializeField, Min(.05f)] private float collisionRadius = .2f;
         private readonly RaycastHit[] hits = new RaycastHit[16];
         private float currentDistance, distanceVelocity;
+        private float helmBlend;
+        private PlayerLocomotion locomotion;
+        private PirateShipHelm lastHelm;
         public void Configure(Transform follow, PlayerInputReader reader, Transform root)
         {
             target = follow; input = reader; playerRoot = root;
+            locomotion = root.GetComponent<PlayerLocomotion>();
             yaw = root.eulerAngles.y; currentDistance = distance;
         }
-        private void Awake() { currentDistance = distance; }
+        private void Awake()
+        {
+            currentDistance = distance;
+            if (playerRoot) locomotion = playerRoot.GetComponent<PlayerLocomotion>();
+        }
         private void LateUpdate()
         {
             if (!target || !input) return;
-            Vector2 look = input.Look;
+            PirateShipHelm ship = locomotion ? locomotion.RidingShip : null;
+            bool steering = ship && ship.IsSteering;
+            if (steering) lastHelm = ship;
+            helmBlend = Mathf.MoveTowards(helmBlend, steering ? 1f : 0f, Time.deltaTime / .55f);
+            Vector2 look = steering ? Vector2.zero : input.Look;
             yaw = Mathf.Repeat(yaw + look.x * sensitivity, 360f);
             pitch = Mathf.Clamp(pitch - look.y * sensitivity, minPitch, maxPitch);
             Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
@@ -42,7 +55,28 @@ namespace PirateLegends.CameraSystem
             }
             currentDistance = allowedDistance < currentDistance ? allowedDistance :
                 Mathf.SmoothDamp(currentDistance, allowedDistance, ref distanceVelocity, .12f);
-            transform.SetPositionAndRotation(target.position + backward * currentDistance, rotation);
+            Vector3 position = target.position + backward * currentDistance;
+            if (lastHelm && helmBlend > 0f)
+            {
+                Transform hull = lastHelm.transform;
+                Vector3 focus = hull.position + hull.forward * 5f + Vector3.up * 4.5f;
+                Vector3 overview = hull.position - hull.forward * 41f + Vector3.up * 18f;
+                Vector3 offset = overview - focus;
+                int obstacles = Physics.SphereCastNonAlloc(focus, .4f, offset.normalized, hits,
+                    offset.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                float clearance = offset.magnitude;
+                for (int i = 0; i < obstacles; i++)
+                {
+                    Transform obstacle = hits[i].collider.transform;
+                    if (obstacle.IsChildOf(hull) || (playerRoot && obstacle.IsChildOf(playerRoot))) continue;
+                    clearance = Mathf.Min(clearance, Mathf.Max(1f, hits[i].distance - .4f));
+                }
+                overview = focus + offset.normalized * clearance;
+                float blend = Mathf.SmoothStep(0f, 1f, helmBlend);
+                position = Vector3.Lerp(position, overview, blend);
+                rotation = Quaternion.Slerp(rotation, Quaternion.LookRotation(focus - overview), blend);
+            }
+            transform.SetPositionAndRotation(position, rotation);
         }
     }
 }

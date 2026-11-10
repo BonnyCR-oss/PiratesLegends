@@ -18,13 +18,22 @@ public static class WindCharacterSetup
         if (EditorApplication.isPlaying) throw new InvalidOperationException("Salir de Play antes de configurar.");
         string[] files = { "Personaje_Verde_Para_Mixamo@Idle.fbx", "walkVientoPerosnaje.fbx", "Personaje_Verde_Para_Mixamo@Fast Run.fbx", "Personaje_Verde_Para_Mixamo@Jump.fbx", "Personaje_Verde_Para_Mixamo@Hability1.fbx", "Hability2.fbx", "Personaje_Verde_Para_Mixamo@Sword And Shield Death.fbx" };
         string[] names = { "Idle", "Walk", "Run", "Jump", "Ability1", "Ability2", "Death" };
+        // Share the neutral rig; action poses cannot define consistent humanoid axes.
+        string referencePath = Root + "Models/Personaje_Verde_mixamolisto.fbx";
+        var referenceImporter = (ModelImporter)AssetImporter.GetAtPath(referencePath);
+        referenceImporter.animationType = ModelImporterAnimationType.Human;
+        referenceImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+        referenceImporter.SaveAndReimport();
+        var referenceAvatar = AssetDatabase.LoadAllAssetsAtPath(referencePath).OfType<Avatar>()
+            .First(a => a.isValid && a.isHuman);
         var clips = new AnimationClip[files.Length];
         for (int i = 0; i < files.Length; i++)
         {
             string path = Root + "Animations/" + files[i];
             var importer = (ModelImporter)AssetImporter.GetAtPath(path);
             importer.animationType = ModelImporterAnimationType.Human;
-            importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            importer.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
+            importer.sourceAvatar = referenceAvatar;
             importer.importAnimation = true;
             importer.importCameras = false;
             importer.importLights = false;

@@ -88,7 +88,7 @@ namespace PirateLegends.Player
 
         private void OnAnimatorMove()
         {
-            if (IsActive && locomotion) locomotion.ApplyAbilityMotion(animator.deltaPosition);
+            if (IsActive && locomotion && locomotion.isActiveAndEnabled) locomotion.ApplyAbilityMotion(animator.deltaPosition);
         }
 
         private void LateUpdate()
