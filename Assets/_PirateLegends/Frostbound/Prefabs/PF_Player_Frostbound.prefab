@@ -885,6 +885,30 @@ PrefabInstance:
       value: -0.37007377
       objectReference: {fileID: 0}
     - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786931287843561854, guid: ffe0d887cc352586d97eba9333c61d32, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 145fa979fda4c678f834101adf458641, type: 2}
