@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-10",
+  "method": "Anatomical chains, surface regularization, rigid soles, articulated fingers",
+  "results": [
+    {
+      "name": "CorsarioEspadachin",
+      "avatarValid": true,
+      "clips": 9,
+      "versions": [
+        {
+          "version": "previous",
+          "frames": 72,
+          "finite": true,
+          "unweighted": 0,
+          "normalizationError": 1.1920929e-7,
+          "soleEdges": 3144,
+          "maximumSoleLengthRatio": 9.628266
+        },
+        {
+          "version": "repaired",
+          "frames": 72,
+          "finite": true,
+          "unweighted": 0,
+          "normalizationError": 1.1920929e-7,
+          "soleEdges": 3144,
+          "maximumSoleLengthRatio": 1.00016308
+        }
+      ]
+    },
+    {
+      "name": "CorsarioLuchador",
+      "avatarValid": true,
+      "clips": 7,
+      "versions": [
+        {
+          "version": "previous",
+          "frames": 56,
+          "finite": true,
+          "unweighted": 0,
+          "normalizationError": 1.1920929e-7,
+          "soleEdges": 3484,
+          "maximumSoleLengthRatio": 4.8951416
+        },
+        {
+          "version": "repaired",
+          "frames": 56,
+          "finite": true,
+          "unweighted": 0,
+          "normalizationError": 1.1920929e-7,
+          "soleEdges": 3484,
+          "maximumSoleLengthRatio": 1.00021625
+        }
+      ]
+    }
+  ]
+}

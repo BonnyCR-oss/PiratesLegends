@@ -22,6 +22,13 @@ namespace PirateLegends.CameraSystem
         private float helmBlend;
         private PlayerLocomotion locomotion;
         private PirateShipHelm lastHelm;
+        private float impulseTime, impulseDuration, impulseStrength;
+        public void AddImpulse(float strength, float duration)
+        {
+            impulseStrength = Mathf.Max(impulseStrength, Mathf.Clamp(strength, 0, .08f));
+            impulseDuration = Mathf.Max(.01f, duration);
+            impulseTime = impulseDuration;
+        }
         public void Configure(Transform follow, PlayerInputReader reader, Transform root)
         {
             target = follow; input = reader; playerRoot = root;
@@ -75,6 +82,14 @@ namespace PirateLegends.CameraSystem
                 float blend = Mathf.SmoothStep(0f, 1f, helmBlend);
                 position = Vector3.Lerp(position, overview, blend);
                 rotation = Quaternion.Slerp(rotation, Quaternion.LookRotation(focus - overview), blend);
+            }
+            if (impulseTime > 0)
+            {
+                impulseTime = Mathf.Max(0, impulseTime - Time.deltaTime);
+                float envelope = impulseTime / impulseDuration;
+                Vector2 shake = new Vector2(Mathf.Sin(Time.time * 103), Mathf.Sin(Time.time * 127 + 1));
+                position += rotation * new Vector3(shake.x, shake.y, 0) * (impulseStrength * envelope * envelope);
+                if (impulseTime == 0) impulseStrength = 0;
             }
             transform.SetPositionAndRotation(position, rotation);
         }

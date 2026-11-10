@@ -8,22 +8,27 @@
         {
             "name": "Walk input",
             "pass": true,
-            "evidence": "distance=1,649746 Speed=0,4641638"
+            "evidence": "distance=1,631131 Speed=0,4598149"
         },
         {
             "name": "Run input",
             "pass": true,
-            "evidence": "distance=3,377409 walk=1,649746"
+            "evidence": "distance=3,396508 walk=1,631131"
         },
         {
             "name": "Jump input",
             "pass": true,
-            "evidence": "height=1,23437 grounded=True"
+            "evidence": "height=1,228987 grounded=True"
         },
         {
             "name": "H1 ground and dedup",
             "pass": true,
             "evidence": "health=145 hits=1 impact=(-3.00, 0.03, 2.00)"
+        },
+        {
+            "name": "Three orbiting lances",
+            "pass": true,
+            "evidence": "orbiting=3"
         },
         {
             "name": "H2 three collisions",
@@ -48,7 +53,7 @@
         {
             "name": "Wall blocks projectile",
             "pass": true,
-            "evidence": "covered health=200 impact=(4.42, 1.09, 4.69)"
+            "evidence": "covered health=200 impact=(2.07, 1.21, -1.42)"
         },
         {
             "name": "Friendly fire disabled",
@@ -64,6 +69,11 @@
             "name": "Reset targets input",
             "pass": true,
             "evidence": "R restored all targets"
+        },
+        {
+            "name": "Cancel VFX cleanup",
+            "pass": true,
+            "evidence": "started=True remaining=0 unlocked=True"
         }
     ],
     "complete": true

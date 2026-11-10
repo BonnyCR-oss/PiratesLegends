@@ -58,13 +58,21 @@ namespace PirateLegends.Frostbound
             // Cast through the actual keyboard path, at a valid ground point beside Blanco_1.
             Aim(new Vector3(-3,0,2));yield return null;
             Keys(Key.Digit1);yield return new WaitForSeconds(.08f);Keys();
-            yield return new WaitForSeconds(2.05f);
+            yield return new WaitForSeconds(.82f);
+            ScreenCapture.CaptureScreenshot(Folder+"/01_H1_Charge.png");
+            yield return new WaitForSeconds(1.23f);
             Record("H1 ground and dedup",first.Current==first.maximum-skills.slamDamage && first.HitCount==1,"health="+first.Current+" hits="+first.HitCount+" impact="+skills.LastImpact);
             ScreenCapture.CaptureScreenshot(Folder+"/02_H1_Impact.png");
             yield return new WaitForSeconds(2);
             Aim(second.transform.position);yield return null;
             Keys(Key.Digit2);yield return new WaitForSeconds(.08f);Keys();
-            yield return new WaitForSeconds(3.2f);
+            yield return new WaitForSeconds(1.65f);
+            int orbiting=0;
+            foreach(var item in FindObjectsByType<Transform>(FindObjectsSortMode.None))
+                if(item.name.StartsWith("FrostVFX_OrbitLance_"))orbiting++;
+            Record("Three orbiting lances",orbiting==3,"orbiting="+orbiting);
+            ScreenCapture.CaptureScreenshot(Folder+"/02_H2_Orbit.png");
+            yield return new WaitForSeconds(1.55f);
             Record("H2 three collisions",second.HitCount==3 && second.Current==second.maximum-skills.lanceDamage*3,"health="+second.Current+" hits="+second.HitCount+" total impacts="+skills.Impacts);
             ScreenCapture.CaptureScreenshot(Folder+"/03_H2_Impacts.png");
             yield return new WaitForSeconds(.8f);
@@ -91,6 +99,18 @@ namespace PirateLegends.Frostbound
             Record("Miss has no damage",skills.Impacts==impacts,"impacts="+skills.Impacts);
             Keys(Key.R);yield return new WaitForSeconds(.08f);Keys();yield return null;
             Record("Reset targets input",first.Current==first.maximum && second.Current==second.maximum && third.Current==third.maximum,"R restored all targets");
+            // Cancel during lance preparation: presentation must release orbiting
+            // meshes and audio, while the motor and Animator resume normally.
+            ResetPosition();yield return new WaitForSeconds(.2f);
+            Aim(second.transform.position);yield return null;
+            bool started=skills.TryCast(2);yield return new WaitForSeconds(1.35f);
+            skills.enabled=false;yield return null;yield return null;
+            int remaining=0;
+            foreach(var item in FindObjectsByType<Transform>(FindObjectsSortMode.None))
+                if(item.name.StartsWith("FrostVFX_OrbitLance_") || item.name.StartsWith("FrostVFX_Channel_"))remaining++;
+            Record("Cancel VFX cleanup",started && remaining==0 && !motor.MovementLocked && animator.speed==1,
+                "started="+started+" remaining="+remaining+" unlocked="+!motor.MovementLocked);
+            skills.enabled=true;
             ResetPosition();orbit.enabled=true;Cursor.lockState=CursorLockMode.Locked;
             report.complete=true;Save();Debug.Log("FROSTBOUND_VERIFICATION_COMPLETE");
         }

@@ -275,7 +275,9 @@ namespace PirateLegends.UI
             var bounds = meshes[0].bounds;
             foreach (var mesh in meshes)
                 bounds.Encapsulate(mesh.bounds);
-            preview.transform.position += stage.position - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
+            // The prefab root is at the feet; skinned bounds include animation padding.
+            // Align that root with the deck instead of lifting it by the padded bounds.
+            preview.transform.position += stage.position - new Vector3(bounds.center.x, preview.transform.position.y, bounds.center.z);
             float height = Mathf.Max(bounds.size.y, 1f);
             Vector3 focus = stage.position + Vector3.up * height * .46f;
             previewCamera.transform.position = focus + new Vector3(.21f, .09f, 1f) * height * 2.03f;

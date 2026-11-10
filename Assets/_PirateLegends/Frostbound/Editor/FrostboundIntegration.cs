@@ -29,8 +29,8 @@ public static class FrostboundIntegration
         bodyMat.SetFloat("_Cull",0);
         var bow = MakeEffect("IceBow",ice,Quaternion.identity,.9f,false);
         var arrow = MakeEffect("IceArrow",ice,Quaternion.identity,.85f,false);
-        var lance = MakeEffect("IceLance",ice,Quaternion.Euler(90,0,0),1.2f,false);
-        var spike = MakeEffect("IceSpike",ice,Quaternion.identity,1,true);
+        var lance = MakeEffect("IceLance",ice,Quaternion.identity,1.2f,false);
+        var spike = MakeEffect("IceSpike",ice,Quaternion.Euler(-90,0,0),1,true);
         var fragment = MakeEffect("IceFragment",glow,Quaternion.identity,5,false);
 
         var root = new GameObject("PF_Player_Frostbound");
@@ -67,7 +67,7 @@ public static class FrostboundIntegration
     }
     static AnimationClip[] ImportClips()
     {
-        string[] files={"Idleforunity.fbx","Frostbound_Optimizado_Mixamo@Walking.fbx","Fast Run.fbx","Jump.fbx","Frostbound_Habilidad_1.fbx","Frostbound_Habilidad_2.fbx","Frostbound_Habilidad_3.fbx"};
+        string[] files={"Idleforunity.fbx","Frostbound_Optimizado_Mixamo@Walking.fbx","FastRun2.fbx","Jump.fbx","Frostbound_Habilidad_1.fbx","Frostbound_Habilidad_2.fbx","Frostbound_Habilidad_3.fbx"};
         string[] names={"Idle","Walk","Run","Jump","Ability1","Ability2","Ability3"};
         var clips=new AnimationClip[files.Length];
         for(int i=0;i<files.Length;i++)

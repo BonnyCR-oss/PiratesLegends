@@ -37,6 +37,7 @@ namespace PirateLegends.Frostbound
         Vector3 aimPoint, groundPoint;
         string status = "Apunta al suelo para Impacto glacial";
         Coroutine cast;
+        FrostboundVfx vfx;
         public bool IsBusy => busy;
         public bool IsAimingBow => aimingBow;
         public Vector3 AimPoint => aimPoint;
@@ -54,6 +55,9 @@ namespace PirateLegends.Frostbound
                 rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
             }
             if (!aimCamera) aimCamera = Camera.main;
+            vfx = GetComponent<FrostboundVfx>();
+            if (!vfx) vfx = gameObject.AddComponent<FrostboundVfx>();
+            vfx.Configure(this, leftHand, rightHand);
         }
         void Start()
         {
@@ -137,9 +141,9 @@ namespace PirateLegends.Frostbound
         {
             status="Impacto glacial · objetivo fijado";
             yield return new WaitForSeconds(13f/30);
-            StartCoroutine(ChargeHands(40f/30));
+            vfx.Begin(1, target);
             yield return new WaitForSeconds(44f/30);
-            Impact(target+Vector3.up*.03f,groundRadius,slamDamage,false);
+            Impact(target+Vector3.up*.03f,groundRadius,slamDamage,false,true);
             yield return new WaitForSeconds(Mathf.Max(.1f,clip1Length-57f/30));
             Finish();
         }
@@ -147,11 +151,12 @@ namespace PirateLegends.Frostbound
         {
             status="Lanzas de escarcha · dirección fijada";
             yield return new WaitForSeconds(33f/30);
-            StartCoroutine(ChargeHands(34f/30));
+            vfx.Begin(2, target);
             yield return new WaitForSeconds(34f/30);
             for(int i=0;i<3;i++)
             {
                 Vector3 origin=(rightHand?rightHand.position:transform.position+Vector3.up*1.3f)+transform.right*(i-1)*.22f;
+                origin=vfx.TakeLance(i,origin);
                 Launch(lancePrefab,origin,target,lanceSpeed,lanceDamage,1.2f,false);
                 if(i<2) yield return new WaitForSeconds(4f/30);
             }
@@ -161,9 +166,10 @@ namespace PirateLegends.Frostbound
         {
             status="Arco de hielo · mantén 3 para tensar; suelta para disparar";
             yield return new WaitForSeconds(5f/30);
+            vfx.Begin(3, aimPoint);
             bow=Instantiate(bowPrefab); bow.name="IceBow_Equipped";
             var lineObject=new GameObject("Dynamic_BowString"); lineObject.transform.SetParent(bow.transform,false);
-            stringLine=lineObject.AddComponent<LineRenderer>(); stringLine.sharedMaterial=glowMaterial;
+            stringLine=lineObject.AddComponent<LineRenderer>(); stringLine.sharedMaterial=vfx.EnergyMaterial?vfx.EnergyMaterial:glowMaterial;
             stringLine.positionCount=3; stringLine.widthMultiplier=.015f; stringLine.useWorldSpace=true;
             stringLine.enabled=false; bowScale=.01f;
             float age=5f/30;
@@ -176,6 +182,7 @@ namespace PirateLegends.Frostbound
             }
             aimingBow=true; animator.Play("Ability3",0,(79f/30)/clip3Length); animator.speed=0;
             nockedArrow=Instantiate(arrowPrefab); nockedArrow.name="IceArrow_Nocked";
+            vfx.Nock(nockedArrow);
             while(!releaseRequested) { Face(aimPoint); yield return null; }
             aimingBow=false;
             Vector3 chosen=aimPoint;
@@ -224,16 +231,6 @@ namespace PirateLegends.Frostbound
             if(visual) Destroy(visual);
             dissolvingBow=null;
         }
-        IEnumerator ChargeHands(float duration)
-        {
-            float t=0;
-            while(t<duration && busy)
-            {
-                if(leftHand) Shard(leftHand.position+Random.insideUnitSphere*.12f,.12f);
-                if(rightHand) Shard(rightHand.position+Random.insideUnitSphere*.12f,.12f);
-                t+=.09f; yield return new WaitForSeconds(.09f);
-            }
-        }
         public void Launch(GameObject prefab,Vector3 origin,Vector3 target,float speed,float damage,float radius,bool arrow)
         {
             Vector3 direction=(target-origin).normalized;
@@ -241,27 +238,14 @@ namespace PirateLegends.Frostbound
             var go=Instantiate(prefab,origin,Quaternion.LookRotation(direction));
             var projectile=go.AddComponent<FrostboundProjectile>(); projectile.owner=this; projectile.direction=direction;
             projectile.speed=speed; projectile.damage=damage; projectile.blastRadius=radius; projectile.arrow=arrow; projectile.collisionMask=collisionMask;
-            var trail=go.AddComponent<TrailRenderer>(); trail.sharedMaterial=glowMaterial; trail.time=.22f;
-            trail.startWidth=arrow?.1f:.17f; trail.endWidth=0;
+            vfx.Projectile(go,arrow);
         }
-        public void Impact(Vector3 point,float radius,float damage,bool arrow)
+        public void Impact(Vector3 point,float radius,float damage,bool arrow,bool slam=false)
         {
             Impacts++; LastImpact=point;
             int hits=FrostboundHealth.Area(point,radius,damage,transform,team,friendlyFire,collisionMask);
             DamagedTargets+=hits; status=$"Impacto · {hits} objetivo(s) · daño {damage:0}";
-            int count=arrow?16:11;
-            for(int i=0;i<count;i++)
-            {
-                float angle=i*Mathf.PI*2/count;
-                Vector3 offset=new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*radius*Random.Range(.2f,.8f);
-                var spike=Instantiate(spikePrefab,point+offset,Quaternion.Euler(Random.Range(-15,15),Random.Range(0,360),Random.Range(-15,15)));
-                spike.transform.localScale*=Random.Range(.65f,1.35f); spike.AddComponent<FrostboundEffect>().lifetime=2.2f;
-            }
-            for(int i=0;i<22;i++) Shard(point+Vector3.up*.35f,Random.Range(.12f,.3f));
-            var wave=new GameObject("Ice_ImpactRing"); var ring=wave.AddComponent<LineRenderer>();
-            ring.sharedMaterial=glowMaterial; ring.widthMultiplier=.1f; ring.loop=true; ring.positionCount=64;
-            for(int i=0;i<64;i++) {float a=i*Mathf.PI*2/64; ring.SetPosition(i,point+new Vector3(Mathf.Cos(a)*radius,.06f,Mathf.Sin(a)*radius));}
-            Destroy(wave,.45f);
+            vfx.Impact(point,radius,slam?1:arrow?3:2);
         }
         void Shard(Vector3 position,float size)
         {
@@ -270,10 +254,11 @@ namespace PirateLegends.Frostbound
             var effect=go.AddComponent<FrostboundEffect>(); effect.fragment=true; effect.lifetime=.7f;
             effect.velocity=Random.onUnitSphere*2+Vector3.up*1.5f;
         }
-        void Finish() { busy=false; aimingBow=false; motor.MovementLocked=false; animator.speed=1; animator.CrossFadeInFixedTime("Locomotion",.1f); cast=null; }
+        void Finish() { vfx.StopCharge(); busy=false; aimingBow=false; motor.MovementLocked=false; animator.speed=1; animator.CrossFadeInFixedTime("Locomotion",.1f); cast=null; }
         void CancelCast()
         {
             StopAllCoroutines(); if(bow) Destroy(bow); if(nockedArrow) Destroy(nockedArrow); if(dissolvingBow) Destroy(dissolvingBow);
+            if(vfx) vfx.StopCharge();
             bow=null; stringLine=null; cast=null; busy=false; aimingBow=false;
             if(motor) motor.MovementLocked=false;
             if(animator) {animator.speed=1; animator.CrossFadeInFixedTime("Locomotion",.1f);}

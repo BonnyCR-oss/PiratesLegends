@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4143052476259761739}
   - component: {fileID: 255784704525725861}
   - component: {fileID: 2713143075226785305}
+  - component: {fileID: 8332743067998256878}
   m_Layer: 0
   m_Name: PF_Player_Frostbound
   m_TagString: Player
@@ -136,6 +137,27 @@ MonoBehaviour:
   clip1Length: 3.7000003
   clip2Length: 3.5333335
   clip3Length: 5.0000005
+--- !u!114 &8332743067998256878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2343322467720805447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef45e66bc0b01b15791c9f0932994ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateLegends.Frostbound.FrostboundVfx
+  effectShader: {fileID: 4800000, guid: ce1fb0d6f5e87cc5aa5a6d56d0cfca40, type: 3}
+  chargeSound: {fileID: 8300000, guid: f72d0c9242cc74e748a3ba7109a042af, type: 3}
+  slamSound: {fileID: 8300000, guid: 18c6855d2ecbe359b9fcb0bd02e21a10, type: 3}
+  lanceSound: {fileID: 8300000, guid: 1f67b871e41023774a966c2f2b98e1af, type: 3}
+  bowSound: {fileID: 8300000, guid: 9ad0fc9ac31a8dc8da885f0f716e663a, type: 3}
+  releaseSound: {fileID: 8300000, guid: 7bad0acf723bba873a17adfa41010435, type: 3}
+  burstSound: {fileID: 8300000, guid: 795151278ab8d8b349cd1676138d3a3f, type: 3}
+  volume: 0.65
+  cameraImpulses: 1
 --- !u!1001 &5742204992158963678
 PrefabInstance:
   m_ObjectHideFlags: 0
